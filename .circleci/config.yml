@@ -1,25 +1,44 @@
 version: 2.1
 jobs:
- configure_infrastructure: 
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["1f:6e:60:1c:f7:7e:19:ca:25:e0:2c:6c:9f:f9:c7:22"] # You can get this ID in the section where you registered the SSH Key
-      - run:
-          name: Install dependencies
-          command: |
-            # install dependencies needed for your playbook
-            apk add --update ansible 
-      - run:
-          name: Configure server
-          command: |
-            ansible-playbook -i inventory.txt main-remote.yml
+#  configure_infrastructure: 
+#     docker:
+#       - image: python:3.7-alpine3.11
+#     steps:
+#       - checkout
+#       - add_ssh_keys:
+#           fingerprints: ["1f:6e:60:1c:f7:7e:19:ca:25:e0:2c:6c:9f:f9:c7:22"] # You can get this ID in the section where you registered the SSH Key
+#       - run:
+#           name: Install dependencies
+#           command: |
+#             # install dependencies needed for your playbook
+#             apk add --update ansible 
+#       - run:
+#           name: Configure server
+#           command: |
+#             ansible-playbook -i inventory.txt main-remote.yml
+            
+ # Exercise: Smoke Testing
+ smoke_test:
+  docker:
+   - image: alpine:latest
+ steps:
+   - run: apk add --update curl
+   - run:
+       name: smoke test
+       command: |
+         URL="https://blog.udacity.com/"
+         # Test if website exists
+         if curl -s --head ${URL} 
+         then
+           return 0
+         else
+           return 1
+         fi      
             
 workflows:
   # Name the workflow "welcome"
   myworkflow:
     # Run the welcome/run job in its own container
     jobs:
-      - configure_infrastructure
+#     - configure_infrastructure
+      - smoke_test
