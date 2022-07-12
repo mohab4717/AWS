@@ -1,3 +1,4 @@
+version: 2.1
 jobs:
  configure_infrastructure: 
     docker:
@@ -18,7 +19,7 @@ jobs:
             
 workflows:
   # Name the workflow "welcome"
-  my_workflow:
+  myworkflow:
     # Run the welcome/run job in its own container
     jobs:
       - configure_infrastructure
